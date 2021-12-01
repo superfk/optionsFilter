@@ -1,0 +1,146 @@
+{
+  "name": "minimal-react-electron-app",
+  "version": "0.1.0",
+  "private": true,
+  "main": "electron.js",
+  "homepage": "./",
+  "author": "Bareiss/Shawn Hsiao",
+  "description": "this is a demo of minimal react-electron app",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/superfk/minimal-react-electron-app.git"
+  },
+  "scripts": {
+    "react-start": "react-scripts start",
+    "build-react": "react-scripts --max_old_space_size=4096 build",
+    "react-test": "react-scripts test",
+    "react-eject": "react-scripts eject",
+    "start": "concurrently \"cross-env BROWSER=none npm run react-start\" \"wait-on http://localhost:3000 && electron .\"",
+    "build-electron-publish": "yarn build-react && copy C:\\minimal-react-electron-app\\electron.js C:\\minimal-react-electron-app\\build\\electron.js && copy C:\\minimal-react-electron-app\\install.nsh C:\\minimal-react-electron-app\\build\\install.nsh && electron-builder build --win -c.extraMetadata.main=build/electron.js --publish always",
+    "build-electron-local": "yarn build-react && copy C:\\minimal-react-electron-app\\electron.js C:\\minimal-react-electron-app\\build\\electron.js && copy C:\\minimal-react-electron-app\\install.nsh C:\\minimal-react-electron-app\\build\\install.nsh && electron-builder build --win -c.extraMetadata.main=build/electron.js --publish never"
+  },
+  "build": {
+    "productName": "minimal-react-electron-app",
+    "appId": "app.minimal-react-electron-app.v000900",
+    "copyright": "bareiss",
+    "buildVersion": "0.1.0",
+    "releaseInfo": {
+      "releaseNotesFile": "build/release-notes.md",
+      "releaseName": "minimal-react-electron-app"
+    },
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "publish": [
+        {
+          "provider": "github",
+          "owner": "superfk",
+          "repo": "minimal-react-electron-app",
+          "private": true,
+          "releaseType": "release"
+        }
+      ],
+      "icon": "build/assets/img/appIcon.ico",
+      "files": [
+        "build/**/*",
+        "node_modules/**/*",
+        "package.json",
+        "!venv/**/*",
+        "!systemlog/**/*",
+        "!src/**/*",
+        "!**/build/xpyserver_dist${/*}",
+        "!.vscode/*",
+        "!**/build/server${/*}",
+        "!**/build/systemlog${/*}",
+        "!**/.git/**/*",
+        "!**/__pycache__/**/*",
+        "!BaOneProcedure/**/*",
+        "!extlib/**/*"
+      ],
+      "extraFiles": [
+        {
+          "from": "pyserver_dist",
+          "to": "pyserver_dist",
+          "filter": [
+            "**/*"
+          ]
+        },
+        {
+          "from": "build/lang",
+          "to": "lang",
+          "filter": [
+            "**/*"
+          ]
+        },
+        {
+          "from": "config.json",
+          "to": "config.json",
+          "filter": [
+            "**/*"
+          ]
+        }
+      ],
+      "requestedExecutionLevel": "requireAdministrator",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": false,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "minimal-react-electron-app",
+      "installerIcon": "build/assets/img/appIcon.ico",
+      "uninstallerIcon": "build/assets/img/appIcon.ico",
+      "installerHeaderIcon": "build/assets/img/appIcon.ico",
+      "artifactName": "minimal-react-electron-app Setup.${ext}",
+      "runAfterFinish": false,
+      "include": "build/install.nsh"
+    }
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "dependencies": {
+    "cross-env": "^6.0.3",
+    "electron-devtools-installer": "^3.1.1",
+    "electron-is-dev": "^1.1.0",
+    "electron-root-path": "^1.0.16",
+    "find-process": "^1.4.3",
+    "human-signals": "^2.1.0",
+    "moment": "^2.24.0",
+    "react": "^16.13.1",
+    "react-base-table": "^1.13.0",
+    "react-dom": "^16.13.1",
+    "react-scripts": "^3.4.3",
+    "taskkill": "^3.1.0",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "concurrently": "^5.2.0",
+    "electron": "^16.0.2",
+    "electron-builder": "^22.6.0",
+    "electron-react-devtools": "^0.5.3",
+    "wait-on": "^3.3.0"
+  }
+}

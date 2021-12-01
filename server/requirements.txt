@@ -1,0 +1,16 @@
+PyInstaller
+websockets
+pandas
+yahoo_fin
+yfinance
+requests
+requests_html
+pandas_datareader
+requests_cache
+requests-oauthlib
+sqlalchemy
+matplotlib
+yahooquery
+beautifulsoup4
+selenium 
+Proxy-List-Scrapper

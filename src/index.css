@@ -1,0 +1,137 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+@font-face {
+  font-family: 'MyFontEn';
+  src: url(./assets/font/Roboto/Roboto-Regular.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: 'MyFontChS';
+  src: url(./assets/font/Noto_Sans_SC/NotoSansSC-Regular.otf) format('truetype');
+}
+@font-face {
+  font-family: 'MyFontChT';
+  src: url(./assets/font/Noto_Sans_TC/NotoSansTC-Regular.otf) format('truetype');
+}
+
+html , body {
+  width: 100vw;
+  height: 100vh;
+  background-color: transparent !important;
+}
+
+body {
+  font-family: MyFontChS, MyFontChT, MyFontEn, 'Open Sans', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+#root {
+  width: 100%;
+  height: 100%;
+  background-color: transparent !important;
+}
+
+*:focus {
+  outline: none;    
+}
+
+.tabulator {
+  position: relative;
+  border: 1px solid #999 !important;
+  background-color: transparent !important;
+  font-size: 12px !important;
+  text-align: left;
+  overflow: hidden;
+  transform: translatez(0);
+}
+.tabulator .tabulator-tableHolder .tabulator-table {
+  position: relative;
+  display: inline-block;
+  background-color: transparent !important;
+  white-space: nowrap;
+  overflow: visible;
+  color: black !important;
+}
+.tabulator-row {
+  position: relative;
+  box-sizing: border-box;
+  min-height: 18px !important;
+  background-color: transparent !important;
+}
+.tabulator .tabulator-header {
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  border-bottom: 1px solid #999;
+  background-color: transparent !important;
+  color: black !important;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -o-user-select: none;
+}
+.tabulator .tabulator-header .tabulator-col {
+  display: inline-block;
+  position: relative;
+  box-sizing: border-box;
+  border-right: 1px solid #999 !important;
+  background: transparent !important;
+  text-align: left;
+  vertical-align: bottom;
+  overflow: hidden;
+}
+.tabulator-row .tabulator-cell {
+  border-right: 1px solid #999 !important;
+  border-bottom: 1px solid rgb(207, 205, 205);
+  padding: 2px  !important;
+  height: 22px !important;
+}
+.tabulator-row.tabulator-selected {
+  background-color: #4d86d1 !important;
+}
+.tabulator-row .tabulator-frozen.tabulator-frozen-left {
+  border-right: 1px solid #999 !important;
+}
+.tabulator-row.tabulator-group {
+  padding-top: 2px !important;
+  padding-bottom: 2px !important;
+  font-size: 12px !important;
+}
+.tabulator-row.tabulator-group > span {
+  font-size: 12px !important;
+}
+.tabulator-row.tabulator-group > span > span {
+  font-size: 12px !important;
+}
+.MuiButton-outlined.Mui-disabled {
+  opacity: 0.7;
+}
+#en{
+  opacity: 0;
+  pointer-events: none;
+}
+#de{
+  opacity: 0;
+  pointer-events: none;
+}
+#zh_cn{
+  opacity: 0;
+  pointer-events: none;
+}
+#zh_tw{
+  opacity: 0;
+  pointer-events: none;
+}
+.primaryColor {
+  color: #09203F;
+}
+.btnColor {
+  color: #0281FF;
+}

@@ -1,0 +1,41 @@
+.App {
+  text-align: center;
+}
+.Background{
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  overflow: hidden;
+}
+.Buttons{
+  height: fit-content;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem 2rem;
+  border-bottom: 1px solid rgb(160, 157, 157);
+}
+.Search{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem 2rem;
+}
+.Search > input {
+  padding: 1rem;
+  font-size: 2rem;
+  width: 60%;
+  border-radius: 0.5em;
+}
+.Table{
+flex: 1;
+display: flex;
+flex-direction: row;
+justify-content: center;
+align-items: center;
+}

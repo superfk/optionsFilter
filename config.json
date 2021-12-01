@@ -1,0 +1,12 @@
+{
+    "system": {
+        "locale_num_format": "fr_FR.UTF-8",
+        "default_export_folder": "C:\\data_exports",
+        "default_lang": "en",
+        "mode": "demo"
+    },
+    "report": {
+        "logo": "logo.png",
+        "template": "template.xltm"
+    }
+}

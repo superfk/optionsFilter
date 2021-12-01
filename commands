@@ -1,0 +1,5 @@
+#quick git commit
+git add . && set /P cmt=comment: && git commit -m "%cmt%"
+
+#quick git commit and push
+git add . && set /P cmt=comment: && git commit -m "%cmt%" && git push
