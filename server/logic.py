@@ -1,5 +1,5 @@
 from __future__ import print_function
-import threading, asyncio, os
+import threading, asyncio, os, time, datetime
 from core import OptionReader
 
 class Logic(object):
@@ -32,18 +32,23 @@ class Logic(object):
     
     def run_core(self, ws):
         print('start update')
+        asyncio.run_coroutine_threadsafe(self.sendMsg(ws, 'reply_statustext', '開始更新...'), self.loop).result()
         self.core = OptionReader(self.loop)
         self.core.set_symbols_source(self.symbol_src)
         self.core.connect_db()
         asyncio.run_coroutine_threadsafe(self.core.update(ws), self.loop).result()
         ret = self.core.get_optioins_by_condition()
         asyncio.run_coroutine_threadsafe(self.sendMsg(ws, 'reply_streaming_data', ret), self.loop).result()
+        now = datetime.datetime.strftime(datetime.datetime.now(), '%Y-%m-%d %H:%M:%S')
+        asyncio.run_coroutine_threadsafe(self.sendMsg(ws, 'reply_statustext', f'更新完畢...{now}'), self.loop).result()
         self.core.close_db()
 
     def get_data_freom_db(self, ws, keyword):
         print('start update')
+        asyncio.run_coroutine_threadsafe(self.sendMsg(ws, 'reply_statustext', f'取回資料中...'), self.loop).result()
         self.core = OptionReader(self.loop)
         self.core.connect_db()
         ret = self.core.get_optioins_by_condition(keyword)
         asyncio.run_coroutine_threadsafe(self.sendMsg(ws, 'reply_update_data', ret), self.loop).result()
+        asyncio.run_coroutine_threadsafe(self.sendMsg(ws, 'reply_statustext', f'資料取回完畢!'), self.loop).result()
         self.core.close_db()

@@ -1,5 +1,5 @@
 {
-  "name": "minimal-react-electron-app",
+  "name": "OptionsFilter",
   "version": "0.1.0",
   "private": true,
   "main": "electron.js",
@@ -8,7 +8,7 @@
   "description": "this is a demo of minimal react-electron app",
   "repository": {
     "type": "git",
-    "url": "https://github.com/superfk/minimal-react-electron-app.git"
+    "url": "https://github.com/superfk/optionsFilter.git"
   },
   "scripts": {
     "react-start": "react-scripts start",
@@ -16,17 +16,17 @@
     "react-test": "react-scripts test",
     "react-eject": "react-scripts eject",
     "start": "concurrently \"cross-env BROWSER=none npm run react-start\" \"wait-on http://localhost:3000 && electron .\"",
-    "build-electron-publish": "yarn build-react && copy C:\\minimal-react-electron-app\\electron.js C:\\minimal-react-electron-app\\build\\electron.js && copy C:\\minimal-react-electron-app\\install.nsh C:\\minimal-react-electron-app\\build\\install.nsh && electron-builder build --win -c.extraMetadata.main=build/electron.js --publish always",
-    "build-electron-local": "yarn build-react && copy C:\\minimal-react-electron-app\\electron.js C:\\minimal-react-electron-app\\build\\electron.js && copy C:\\minimal-react-electron-app\\install.nsh C:\\minimal-react-electron-app\\build\\install.nsh && electron-builder build --win -c.extraMetadata.main=build/electron.js --publish never"
+    "build-electron-publish": "yarn build-react && copy C:\\OptionsFilter\\electron.js C:\\OptionsFilter\\build\\electron.js && copy C:\\OptionsFilter\\install.nsh C:\\OptionsFilter\\build\\install.nsh && electron-builder build --win -c.extraMetadata.main=build/electron.js --publish always",
+    "build-electron-local": "yarn build-react && copy C:\\OptionsFilter\\electron.js C:\\OptionsFilter\\build\\electron.js && copy C:\\OptionsFilter\\install.nsh C:\\OptionsFilter\\build\\install.nsh && electron-builder build --win -c.extraMetadata.main=build/electron.js --publish never"
   },
   "build": {
-    "productName": "minimal-react-electron-app",
-    "appId": "app.minimal-react-electron-app.v000900",
+    "productName": "OptionsFilter",
+    "appId": "app.OptionsFilter.v000900",
     "copyright": "bareiss",
     "buildVersion": "0.1.0",
     "releaseInfo": {
       "releaseNotesFile": "build/release-notes.md",
-      "releaseName": "minimal-react-electron-app"
+      "releaseName": "OptionsFilter"
     },
     "directories": {
       "output": "dist"
@@ -36,7 +36,7 @@
         {
           "provider": "github",
           "owner": "superfk",
-          "repo": "minimal-react-electron-app",
+          "repo": "OptionsFilter",
           "private": true,
           "releaseType": "release"
         }
@@ -97,11 +97,11 @@
       "allowToChangeInstallationDirectory": false,
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "shortcutName": "minimal-react-electron-app",
+      "shortcutName": "OptionsFilter",
       "installerIcon": "build/assets/img/appIcon.ico",
       "uninstallerIcon": "build/assets/img/appIcon.ico",
       "installerHeaderIcon": "build/assets/img/appIcon.ico",
-      "artifactName": "minimal-react-electron-app Setup.${ext}",
+      "artifactName": "OptionsFilter Setup.${ext}",
       "runAfterFinish": false,
       "include": "build/install.nsh"
     }
@@ -122,6 +122,7 @@
     ]
   },
   "dependencies": {
+    "@types/tabulator-tables": "^5.0.1",
     "cross-env": "^6.0.3",
     "electron-devtools-installer": "^3.1.1",
     "electron-is-dev": "^1.1.0",
@@ -130,9 +131,9 @@
     "human-signals": "^2.1.0",
     "moment": "^2.24.0",
     "react": "^16.13.1",
-    "react-base-table": "^1.13.0",
     "react-dom": "^16.13.1",
-    "react-scripts": "^3.4.3",
+    "react-scripts": "^4.0.1",
+    "react-tabulator": "^0.14.4",
     "taskkill": "^3.1.0",
     "uuid": "^8.3.2"
   },

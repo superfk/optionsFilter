@@ -1,78 +1,82 @@
-import React from 'react';
-import BaseTable, { Column } from 'react-base-table'
-import 'react-base-table/styles.css'
+import React, {useEffect, useRef} from 'react';
+import 'react-tabulator/lib/styles.css'; // required styles
+import 'react-tabulator/lib/css/tabulator.min.css'; // theme
+import { ReactTabulator } from 'react-tabulator';
 
 import classes from './Table.module.css';
 
+
 const Table = props => {
+
+  const tableRef = useRef();
 
     const columns = [
         {
-          key: 'contractSymbol',
           title: 'contractSymbol',
-          dataKey: 'contractSymbol',
-          width: 200,
-          resizable: true,
-          sortable: true,
-          frozen: Column.FrozenDirection.LEFT,
+          field: 'contractSymbol'
         },
         {
-          key: 'symbol',
           title: 'symbol',
-          dataKey: 'symbol',
-          width: 100,
-          align: Column.Alignment.CENTER,
-          resizable: true,
-          sortable: true,
+          field: 'symbol',
         },
         {
-          key: 'strike',
           title: 'strike',
-          dataKey: 'strike',
-          width: 100,
-          align: Column.Alignment.CENTER,
-          resizable: true,
-          sortable: true,
+          field: 'strike',
+          sorter:"number"
         },
         {
-          key: 'currentPrice',
           title: 'currentPrice',
-          dataKey: 'currentPrice',
-          width: 100,
-          align: Column.Alignment.RIGHT,
-          resizable: true,
-          sortable: true,
+          field: 'currentPrice',
+          sorter:"number"
         },
         {
-          key: 'lastPrice',
           title: 'lastPrice',
-          dataKey: 'lastPrice',
-          width: 100,
-          align: Column.Alignment.CENTER,
-          resizable: true,
-          sortable: true,
+          field: 'lastPrice',
+          sorter:"number"
         },
         {
-          key: 'cp',
           title: 'cp',
-          dataKey: 'cp',
-          width: 100,
-          resizable: true,
-          sortable: true,
+          field: 'cp',
+          sorter:"number"
         },
         {
-          key: 'expiration',
           title: 'expiration',
-          dataKey: 'expiration',
-          width: 200,
-          resizable: true,
-          sortable: true,
+          field: 'expiration',
+          sorter:"date"
+        },
+        {
+          title: 'optionType',
+          field: 'optionType'
         }
       ]
+    
+    const options = {
+        height: 600,
+        groupBy:"optionType",
+        paginationDataSent: {
+          page: 'page',
+          size: 'per_page' // change 'size' param to 'per_page'
+        },
+        paginationDataReceived: {
+          last_page: 'total_pages'
+        },
+        current_page: 1,
+        paginationSize: 3
+      }
+
+    useEffect(() => {
+      tableRef.current.table.setData(props.data)
+    }, [props.data])
+    
 
 
-    return <BaseTable columns={columns} data={props.data} fixed width={1200} height={600} {...props}>
-  </BaseTable>
+    return <ReactTabulator 
+    ref={tableRef}
+    layout="fitColumns"
+    columns={columns}
+    data={[]}
+    options={options}
+    />
 }
 
 export default Table;

@@ -160,6 +160,7 @@ class OptionReader(object):
             df = df.reset_index(drop=False)
             df = df.groupby('symbol').apply(lambda x: self.calc_cp_and_price(x, prices))
             print(f"{datetime.datetime.strftime(datetime.datetime.now(), '%Y-%m-%d %H:%M:%S')} ########## {sybols} completed!##########")
+            # asyncio.run_coroutine_threadsafe(self.sendMsg('reply_statustext', f"成功更新 {sybols} @ {datetime.datetime.strftime(datetime.datetime.now(), '%Y-%m-%d %H:%M:%S')}"), self.loop).result()
         except Exception as e:
             err = traceback.format_exc()
             print(f"opps! error in {sybols}")
@@ -175,6 +176,7 @@ class OptionReader(object):
         self.get_symbol()
         self.loop = asyncio.get_running_loop()
         await self.get_proxy()
+        await self.sendMsg('reply_statustext', f"取得{len(self.goodproxy)}個有效的Proxy...")
         workers_number = len(self.goodproxy) # len(proxies)
         symbols_chunks = []
         chunk_size = max(1, len(self.symbols) // workers_number)
@@ -191,11 +193,25 @@ class OptionReader(object):
             symbols_chunks.append(chunk)
 
         print(f"start fetching...")
-
+        counter = 0
         with ThreadPoolExecutor(max_workers=workers_number) as executor:
-            tasks = [self.loop.run_in_executor(executor, self.get_all, s, i ) for i, s in enumerate(symbols_chunks)]
-            for df in await asyncio.gather(*tasks):
-                self.dfAll = self.dfAll.append(df, ignore_index=True)
+            tasks = {executor.submit(self.get_all, s, i): s for i, s in enumerate(symbols_chunks)}
+            for future in as_completed(tasks):
+                symb = tasks[future]
+                symb = ' '.join(symb)
+                try:
+                    df = future.result()
+                    self.dfAll = self.dfAll.append(df, ignore_index=True)
+                except Exception as exc:
+                    print('%r generated an exception: %s' % (exc))
+                finally:
+                    counter += 1
+                    await self.sendMsg('reply_statustext', f"成功更新 {symb} @ {datetime.datetime.strftime(datetime.datetime.now(), '%Y-%m-%d %H:%M:%S')}")
+                    await self.sendMsg('reply_progresstext', f"{counter} / {len(symbols_chunks)}")
+            # for df in await asyncio.gather(*tasks):
+            #     self.dfAll = self.dfAll.append(df, ignore_index=True)
+            #     counter += 1
+            #     await self.sendMsg('reply_progresstext', f"{counter} / {len(symbols_chunks)}")
         
         self.dfAll = self.dfAll.reset_index(drop=True)
         df = self.dfAll.sort_values(by=['cp'],ascending=False)
@@ -222,8 +238,11 @@ class OptionReader(object):
         df.to_csv(f"{symbol}_{dtype}.csv", index=False, chunksize= 10000)
         return dtype
 
-    def get_optioins_by_condition(self, keyword='', group='calls'):
-        curDf = pd.read_sql(f"SELECT * FROM data WHERE contractSymbol LIKE '%{keyword}%' AND optionType='{group}'", self.con, parse_dates=["expiration"])
+    def get_optioins_by_condition(self, keyword='', group=''):
+        search = f"AND optionType='{group}'"
+        if group == '':
+            search = f""
+        curDf = pd.read_sql(f"SELECT * FROM data WHERE contractSymbol LIKE '%{keyword}%' {search}", self.con, parse_dates=["expiration"])
         curDf.reset_index(drop=True, inplace=True)
         curDf = curDf.sort_values(by=['cp'],ascending=False)
         curDf['expiration'] = curDf['expiration'].dt.strftime('%Y-%m-%d')

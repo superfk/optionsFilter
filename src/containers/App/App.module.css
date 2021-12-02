@@ -32,10 +32,15 @@
   width: 60%;
   border-radius: 0.5em;
 }
+.StatusText{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem 2rem;
+  font-size: small;
+}
 .Table{
 flex: 1;
-display: flex;
-flex-direction: row;
-justify-content: center;
-align-items: center;
+padding: 2rem 3rem;
 }
