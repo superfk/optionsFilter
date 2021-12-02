@@ -1,11 +1,11 @@
 {
-  "name": "OptionsFilter",
+  "name": "optionsFilter",
   "version": "0.1.0",
   "private": true,
   "main": "electron.js",
   "homepage": "./",
-  "author": "Bareiss/Shawn Hsiao",
-  "description": "this is a demo of minimal react-electron app",
+  "author": "Shawn Hsiao",
+  "description": "options filter app",
   "repository": {
     "type": "git",
     "url": "https://github.com/superfk/optionsFilter.git"
@@ -16,17 +16,17 @@
     "react-test": "react-scripts test",
     "react-eject": "react-scripts eject",
     "start": "concurrently \"cross-env BROWSER=none npm run react-start\" \"wait-on http://localhost:3000 && electron .\"",
-    "build-electron-publish": "yarn build-react && copy C:\\OptionsFilter\\electron.js C:\\OptionsFilter\\build\\electron.js && copy C:\\OptionsFilter\\install.nsh C:\\OptionsFilter\\build\\install.nsh && electron-builder build --win -c.extraMetadata.main=build/electron.js --publish always",
-    "build-electron-local": "yarn build-react && copy C:\\OptionsFilter\\electron.js C:\\OptionsFilter\\build\\electron.js && copy C:\\OptionsFilter\\install.nsh C:\\OptionsFilter\\build\\install.nsh && electron-builder build --win -c.extraMetadata.main=build/electron.js --publish never"
+    "build-electron-publish": "yarn build-react && copy C:\\optionsFilter\\electron.js C:\\optionsFilter\\build\\electron.js && copy C:\\optionsFilter\\install.nsh C:\\optionsFilter\\build\\install.nsh && electron-builder build --win -c.extraMetadata.main=build/electron.js --publish always",
+    "build-electron-local": "yarn build-react && copy C:\\optionsFilter\\electron.js C:\\optionsFilter\\build\\electron.js && copy C:\\optionsFilter\\install.nsh C:\\optionsFilter\\build\\install.nsh && electron-builder build --win -c.extraMetadata.main=build/electron.js --publish never"
   },
   "build": {
-    "productName": "OptionsFilter",
-    "appId": "app.OptionsFilter.v000900",
+    "productName": "optionsFilter",
+    "appId": "app.optionsFilter.v000900",
     "copyright": "bareiss",
     "buildVersion": "0.1.0",
     "releaseInfo": {
       "releaseNotesFile": "build/release-notes.md",
-      "releaseName": "OptionsFilter"
+      "releaseName": "optionsFilter"
     },
     "directories": {
       "output": "dist"
@@ -36,7 +36,7 @@
         {
           "provider": "github",
           "owner": "superfk",
-          "repo": "OptionsFilter",
+          "repo": "optionsFilter",
           "private": true,
           "releaseType": "release"
         }
@@ -97,11 +97,11 @@
       "allowToChangeInstallationDirectory": false,
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "shortcutName": "OptionsFilter",
+      "shortcutName": "optionsFilter",
       "installerIcon": "build/assets/img/appIcon.ico",
       "uninstallerIcon": "build/assets/img/appIcon.ico",
       "installerHeaderIcon": "build/assets/img/appIcon.ico",
-      "artifactName": "OptionsFilter Setup.${ext}",
+      "artifactName": "optionsFilter Setup.${ext}",
       "runAfterFinish": false,
       "include": "build/install.nsh"
     }

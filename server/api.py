@@ -5,6 +5,7 @@ from __future__ import print_function
 import os, traceback
 import asyncio
 import websockets
+import websockets.legacy.server
 import json
 from logic import Logic
 
