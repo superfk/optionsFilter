@@ -12,7 +12,7 @@
   },
   "scripts": {
     "react-start": "react-scripts start",
-    "build-react": "react-scripts --max_old_space_size=4096 build",
+    "build-react": "react-scripts --max_old_space_size=2048 build",
     "react-test": "react-scripts test",
     "react-eject": "react-scripts eject",
     "start": "concurrently \"cross-env BROWSER=none npm run react-start\" \"wait-on http://localhost:3000 && electron .\"",
@@ -76,6 +76,13 @@
         {
           "from": "config.json",
           "to": "config.json",
+          "filter": [
+            "**/*"
+          ]
+        },
+        {
+          "from": "nasdaq.csv",
+          "to": "nasdaq.csv",
           "filter": [
             "**/*"
           ]
