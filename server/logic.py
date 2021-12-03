@@ -9,7 +9,15 @@ class Logic(object):
         self.core = None
         self.approot = ''
         self.symbol_src = ''
+        self.now = datetime.datetime.now()
+        self.expired = datetime.datetime(2022,2,1,0,0,0,0)
 
+    async def is_expired(self, websocket):
+        expired = self.now > self.expired
+        if expired:
+            await self.sendMsg(websocket, 'reply_statustext', f'嘿嘿嘿，使用期限到期，請聯絡蕭杯討論訂閱 (゜o゜)')
+        return expired
+    
     async def cmd_wrap(self, websocket, cmd, data):
         print(f"cmd: {cmd}")
         print(f"data: {data}")
@@ -23,10 +31,14 @@ class Logic(object):
             self.approot = data
             self.symbol_src = os.path.join(self.approot, 'nasdaq.csv')
         elif cmd == 'refresh':
-            threading.Thread(target=self.run_core, args=[websocket,]).start()
+            expired = await self.is_expired(websocket)
+            if not expired:
+                threading.Thread(target=self.run_core, args=[websocket,]).start()
         elif cmd == 'get_data_freom_db':
-            keyword = data
-            threading.Thread(target=self.get_data_freom_db, args=[websocket,keyword]).start()
+            expired = await self.is_expired(websocket)
+            if not expired:
+                keyword = data
+                threading.Thread(target=self.get_data_freom_db, args=[websocket,keyword]).start()
         else:
             pass
     

@@ -5,9 +5,7 @@ import pandas as pd
 import asyncio, os, traceback
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import time, threading
-from pandas_datareader.yahoo.headers import DEFAULT_HEADERS
 import datetime, random
-import requests_cache
 from Proxy_List_Scrapper import ALL, Scrapper
 import sqlite3 as sql3
 from sqlite3 import Error
