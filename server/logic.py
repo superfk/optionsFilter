@@ -1,5 +1,5 @@
 from __future__ import print_function
-import threading, asyncio, os, time, datetime
+import threading, asyncio, os, time, datetime, queue
 from core import OptionReader
 
 class Logic(object):
@@ -11,6 +11,9 @@ class Logic(object):
         self.symbol_src = ''
         self.now = datetime.datetime.now()
         self.expired = datetime.datetime(2022,2,1,0,0,0,0)
+        self.stop = False
+        self.refresh_thread = None
+        self.task_queue = queue.Queue()
 
     async def is_expired(self, websocket):
         expired = self.now > self.expired
@@ -34,6 +37,17 @@ class Logic(object):
             expired = await self.is_expired(websocket)
             if not expired:
                 threading.Thread(target=self.run_core, args=[websocket,]).start()
+        elif cmd == 'refresh_bg':
+            expired = await self.is_expired(websocket)
+            if not expired:
+                enable_bg = data
+                if enable_bg:
+                    self.refresh_thread = threading.Thread(target=self.run_core, args=[websocket,True])
+                    self.refresh_thread.start()
+                else:
+                    if self.refresh_thread:
+                        if self.refresh_thread.is_alive():
+                            self.task_queue.put(dict(cmd='stop', data=None))
         elif cmd == 'get_data_freom_db':
             expired = await self.is_expired(websocket)
             if not expired:
@@ -42,18 +56,28 @@ class Logic(object):
         else:
             pass
     
-    def run_core(self, ws):
-        print('start update')
-        asyncio.run_coroutine_threadsafe(self.sendMsg(ws, 'reply_statustext', '開始更新...'), self.loop).result()
-        self.core = OptionReader(self.loop)
-        self.core.set_symbols_source(self.symbol_src)
-        self.core.connect_db()
-        asyncio.run_coroutine_threadsafe(self.core.update(ws), self.loop).result()
-        ret = self.core.get_optioins_by_condition()
-        asyncio.run_coroutine_threadsafe(self.sendMsg(ws, 'reply_streaming_data', ret), self.loop).result()
-        now = datetime.datetime.strftime(datetime.datetime.now(), '%Y-%m-%d %H:%M:%S')
-        asyncio.run_coroutine_threadsafe(self.sendMsg(ws, 'reply_statustext', f'更新完畢...{now}'), self.loop).result()
-        self.core.close_db()
+    def run_core(self, ws, background=False):
+        self.task_queue.put(dict(cmd='run', data=None))
+        while True:
+            msg = self.task_queue.get()
+            cmd = msg['cmd']
+            data = msg['data']
+            if cmd == 'run':
+                print('start update')
+                asyncio.run_coroutine_threadsafe(self.sendMsg(ws, 'reply_statustext', '開始更新...'), self.loop).result()
+                self.core = OptionReader(self.loop)
+                self.core.set_symbols_source(self.symbol_src)
+                self.core.connect_db()
+                asyncio.run_coroutine_threadsafe(self.core.update(ws), self.loop).result()
+                ret = self.core.get_optioins_by_condition()
+                asyncio.run_coroutine_threadsafe(self.sendMsg(ws, 'reply_streaming_data', ret), self.loop).result()
+                now = datetime.datetime.strftime(datetime.datetime.now(), '%Y-%m-%d %H:%M:%S')
+                asyncio.run_coroutine_threadsafe(self.sendMsg(ws, 'reply_statustext', f'更新完畢...{now}'), self.loop).result()
+                self.core.close_db()
+                if background:
+                    self.task_queue.put(dict(cmd='run', data=None))
+            elif cmd == 'stop':
+                break
 
     def get_data_freom_db(self, ws, keyword):
         print('start update')

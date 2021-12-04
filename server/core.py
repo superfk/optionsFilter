@@ -158,12 +158,12 @@ class OptionReader(object):
             df = df.reset_index(drop=False)
             df = df.groupby('symbol').apply(lambda x: self.calc_cp_and_price(x, prices))
             print(f"{datetime.datetime.strftime(datetime.datetime.now(), '%Y-%m-%d %H:%M:%S')} ########## {sybols} completed!##########")
+            return True, df
             # asyncio.run_coroutine_threadsafe(self.sendMsg('reply_statustext', f"成功更新 {sybols} @ {datetime.datetime.strftime(datetime.datetime.now(), '%Y-%m-%d %H:%M:%S')}"), self.loop).result()
         except Exception as e:
             err = traceback.format_exc()
             print(f"opps! error in {sybols}")
-        
-        return df
+            return False, df
 
     def get_best_cp(self, df, cur_price):
         df['cp'] = df['lastPrice'] / cur_price
@@ -198,13 +198,19 @@ class OptionReader(object):
                 symb = tasks[future]
                 symb = ' '.join(symb)
                 try:
-                    df = future.result()
-                    self.dfAll = self.dfAll.append(df, ignore_index=True)
+                    success, df = future.result()
+                    if success:
+                        self.dfAll = self.dfAll.append(df, ignore_index=True)
                 except Exception as exc:
                     print('%r generated an exception: %s' % (exc))
                 finally:
                     counter += 1
-                    await self.sendMsg('reply_statustext', f"成功更新 {symb} @ {datetime.datetime.strftime(datetime.datetime.now(), '%Y-%m-%d %H:%M:%S')}")
+                    if len(symb) > 20:
+                        symb = f"{symb[:17]}..."
+                    status = '成功更新'
+                    if not success:
+                        status = '更新失敗'
+                    await self.sendMsg('reply_statustext', f"{status} {symb} @ {datetime.datetime.strftime(datetime.datetime.now(), '%Y-%m-%d %H:%M:%S')}")
                     await self.sendMsg('reply_progresstext', f"{counter} / {len(symbols_chunks)}")
             # for df in await asyncio.gather(*tasks):
             #     self.dfAll = self.dfAll.append(df, ignore_index=True)

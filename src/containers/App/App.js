@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Button from '../../components/Button/Button';
 import Table from '../../components/Table/Table';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Switch from '@material-ui/core/Switch';
 import classes from './App.module.css';
 
 const electron = window.require('electron');
@@ -13,6 +15,7 @@ const App = props => {
   const [keyword, setkeyword] = useState('');
   const [statustext, setstatustext] = useState('hi!')
   const [progress, setprogress] = useState('')
+  const [bgRefresh, setbgRefresh] = useState(false)
 
   const onStreamingData = useCallback(
     (e, dataset) => {
@@ -59,6 +62,11 @@ const App = props => {
     ipcRenderer.send('to_server', {cmd: 'get_data_freom_db', data: keyword})
   }
 
+  const handlerBackgroundRefresh = (e) => {
+    setbgRefresh(e.target.checked)
+    ipcRenderer.send('to_server', {cmd: 'refresh_bg', data: e.target.checked})
+  }
+
   return <div className={classes.Background}>
     <div className={classes.Search}>
       <input value={keyword} placeholder='Search..' onChange={(e)=>{setkeyword(e.target.value)}}></input>
@@ -68,6 +76,17 @@ const App = props => {
       <p>{progress}</p>
     </div>
     <div className={classes.Buttons}>
+    <FormControlLabel
+        control={
+          <Switch
+            checked={bgRefresh}
+            onChange={handlerBackgroundRefresh}
+            name="background_"
+            color="primary"
+          />
+        }
+        label="背景自動更新"
+      />
       <Button clicked={refreshHandler} text='Refresh' />
     <Button clicked={queryHandler} text='Query' />
     </div>

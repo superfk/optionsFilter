@@ -129,6 +129,7 @@
     ]
   },
   "dependencies": {
+    "@material-ui/core": "^4.12.3",
     "@types/tabulator-tables": "^5.0.1",
     "cross-env": "^6.0.3",
     "electron-devtools-installer": "^3.1.1",
