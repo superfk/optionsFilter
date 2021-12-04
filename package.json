@@ -17,7 +17,8 @@
     "react-eject": "react-scripts eject",
     "start": "concurrently \"cross-env BROWSER=none npm run react-start\" \"wait-on http://localhost:3000 && electron .\"",
     "build-electron-publish": "yarn build-react && copy C:\\optionsFilter\\electron.js C:\\optionsFilter\\build\\electron.js && copy C:\\optionsFilter\\install.nsh C:\\optionsFilter\\build\\install.nsh && electron-builder build --win -c.extraMetadata.main=build/electron.js --publish always",
-    "build-electron-local": "yarn build-react && copy C:\\optionsFilter\\electron.js C:\\optionsFilter\\build\\electron.js && copy C:\\optionsFilter\\install.nsh C:\\optionsFilter\\build\\install.nsh && electron-builder build --win -c.extraMetadata.main=build/electron.js --publish never"
+    "build-electron-local": "yarn build-react && copy C:\\optionsFilter\\electron.js C:\\optionsFilter\\build\\electron.js && copy C:\\optionsFilter\\install.nsh C:\\optionsFilter\\build\\install.nsh && electron-builder build --win -c.extraMetadata.main=build/electron.js --publish never",
+    "build-electron-local-mac": "yarn build-react && cp ~/Documents/code/optionsFilter/electron.js ~/Documents/code/optionsFilter/build/electron.js && cp ~/Documents/code/optionsFilter/install.nsh ~/Documents/code/optionsFilter/build/install.nsh && electron-builder build --win -c.extraMetadata.main=build/electron.js --publish never"
   },
   "build": {
     "productName": "optionsFilter",
