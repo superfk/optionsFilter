@@ -242,10 +242,13 @@ class OptionReader(object):
         df.to_csv(f"{symbol}_{dtype}.csv", index=False, chunksize= 10000)
         return dtype
 
-    def get_optioins_by_condition(self, keyword='', group=''):
-        search = f"AND optionType='{group}'"
-        if group == '':
-            search = f""
+    def get_optioins_by_condition(self, keyword='', group='', date=''):
+        now = datetime.datetime.now().strftime("%Y-%m-%d")
+        search = f""
+        if group != '':
+            search += f"AND optionType='{group}' "
+        if date != '':
+            search += f"AND expiration BETWEEN '{now}' AND '{date}' "
         curDf = pd.read_sql(f"SELECT * FROM data WHERE contractSymbol LIKE '%{keyword}%' {search}", self.con, parse_dates=["expiration"])
         curDf.reset_index(drop=True, inplace=True)
         curDf = curDf.sort_values(by=['cp'],ascending=False)
@@ -269,6 +272,5 @@ class OptionReader(object):
 if __name__ == '__main__':
     core = OptionReader(None)
     core.connect_db()
-    ret = core.get_optioins_by_condition('G')
-    print(ret)
+    ret = core.get_optioins_by_condition(date='2022-02-01')
     core.close_db()

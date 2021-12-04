@@ -34,15 +34,19 @@ class Logic(object):
             self.approot = data
             self.symbol_src = os.path.join(self.approot, 'nasdaq.csv')
         elif cmd == 'refresh':
+            keyword = data['keyword']
+            date = data['date']
             expired = await self.is_expired(websocket)
             if not expired:
-                threading.Thread(target=self.run_core, args=[websocket,]).start()
+                threading.Thread(target=self.run_core, args=[websocket, keyword, date, False]).start()
         elif cmd == 'refresh_bg':
             expired = await self.is_expired(websocket)
             if not expired:
-                enable_bg = data
+                enable_bg = data['enable_bg']
+                keyword = data['keyword']
+                date = data['date']
                 if enable_bg:
-                    self.refresh_thread = threading.Thread(target=self.run_core, args=[websocket,True])
+                    self.refresh_thread = threading.Thread(target=self.run_core, args=[websocket, keyword, date, True])
                     self.refresh_thread.start()
                 else:
                     if self.refresh_thread:
@@ -51,12 +55,15 @@ class Logic(object):
         elif cmd == 'get_data_freom_db':
             expired = await self.is_expired(websocket)
             if not expired:
-                keyword = data
-                threading.Thread(target=self.get_data_freom_db, args=[websocket,keyword]).start()
+                keyword = data['keyword']
+                date = data['date']
+                threading.Thread(target=self.get_data_freom_db, args=[websocket,keyword,date,]).start()
         else:
             pass
     
-    def run_core(self, ws, background=False):
+    def run_core(self, ws, keyword, date, background=False):
+        with self.task_queue.mutex:
+            self.task_queue.queue.clear()
         self.task_queue.put(dict(cmd='run', data=None))
         while True:
             msg = self.task_queue.get()
@@ -69,7 +76,7 @@ class Logic(object):
                 self.core.set_symbols_source(self.symbol_src)
                 self.core.connect_db()
                 asyncio.run_coroutine_threadsafe(self.core.update(ws), self.loop).result()
-                ret = self.core.get_optioins_by_condition()
+                ret = self.core.get_optioins_by_condition(keyword, date=date)
                 asyncio.run_coroutine_threadsafe(self.sendMsg(ws, 'reply_streaming_data', ret), self.loop).result()
                 now = datetime.datetime.strftime(datetime.datetime.now(), '%Y-%m-%d %H:%M:%S')
                 asyncio.run_coroutine_threadsafe(self.sendMsg(ws, 'reply_statustext', f'更新完畢...{now}'), self.loop).result()
@@ -79,12 +86,12 @@ class Logic(object):
             elif cmd == 'stop':
                 break
 
-    def get_data_freom_db(self, ws, keyword):
+    def get_data_freom_db(self, ws, keyword, date):
         print('start update')
         asyncio.run_coroutine_threadsafe(self.sendMsg(ws, 'reply_statustext', f'取回資料中...'), self.loop).result()
         self.core = OptionReader(self.loop)
         self.core.connect_db()
-        ret = self.core.get_optioins_by_condition(keyword)
+        ret = self.core.get_optioins_by_condition(keyword, date=date)
         asyncio.run_coroutine_threadsafe(self.sendMsg(ws, 'reply_update_data', ret), self.loop).result()
         asyncio.run_coroutine_threadsafe(self.sendMsg(ws, 'reply_statustext', f'資料取回完畢!'), self.loop).result()
         self.core.close_db()

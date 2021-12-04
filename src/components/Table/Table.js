@@ -13,39 +13,47 @@ const Table = props => {
     const columns = [
         {
           title: 'contractSymbol',
-          field: 'contractSymbol'
+          field: 'contractSymbol',
+          headerFilter:"input",
         },
         {
           title: 'symbol',
           field: 'symbol',
+          headerFilter:"input",
         },
         {
           title: 'strike',
           field: 'strike',
+          headerFilter:"number", headerFilterPlaceholder:"at least...", headerFilterFunc:">=",
           sorter:"number"
         },
         {
           title: 'currentPrice',
           field: 'currentPrice',
+          headerFilter:"number", headerFilterPlaceholder:"at least...", headerFilterFunc:">=",
           sorter:"number"
         },
         {
           title: 'lastPrice',
           field: 'lastPrice',
+          headerFilter:"number", headerFilterPlaceholder:"at least...", headerFilterFunc:">=",
           sorter:"number"
         },
         {
           title: 'cp',
           field: 'cp',
+          headerFilter:"number", headerFilterPlaceholder:"at least...", headerFilterFunc:">=",
           sorter:"number"
         },
         {
           title: 'expiration',
           field: 'expiration',
+          headerFilter:"input",
           sorter:"date"
         },
         {
           title: 'optionType',
+          headerFilter:"input",
           field: 'optionType'
         }
       ]
